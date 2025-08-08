@@ -18,7 +18,6 @@ void ExecTaskMain(struct tyTaskMain *stpTaskMain)
     case 0: // INIT
       SerialPrintF(Serial, "Skelton Program Start\n");
       SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_BLINK);
-      SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_OFF);
       stpTaskMain->uwStat += 1;
       break;
     case 1: // IDLE
