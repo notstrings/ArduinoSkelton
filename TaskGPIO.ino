@@ -146,12 +146,12 @@ void ExecTaskGPIO(struct tyTaskGPIO *stpTaskGPIO)
 	}
 }
 
-int GetSigLV(struct tyTaskGPIO *stpTaskGPIO, int idx)
+int GetGPIOLV(struct tyTaskGPIO *stpTaskGPIO, int idx)
 {
 	return stpTaskGPIO->stTaskISIG.uwStat[idx];
 }
 
-int GetSigED(struct tyTaskGPIO *stpTaskGPIO, int idx)
+int GetGPIOED(struct tyTaskGPIO *stpTaskGPIO, int idx)
 {
 	int ret = 0;
 	ret |= ( stpTaskGPIO->stTaskISIG.uwREdg[idx] ? 0x01 : 0x00 );
@@ -161,7 +161,7 @@ int GetSigED(struct tyTaskGPIO *stpTaskGPIO, int idx)
 	return ret;
 }
 
-int SetSigMD(struct tyTaskGPIO *stpTaskGPIO, int idx, int req)
+int SetGPIOMD(struct tyTaskGPIO *stpTaskGPIO, int idx, int req)
 {
 	int ret = 0;												// 返却値
 	switch( req ){

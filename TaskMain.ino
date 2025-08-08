@@ -1,7 +1,8 @@
 // ////////////////////////////////////////////////////////////////////////////
 // メインタスク
 
-void InitTaskMain(struct tyTaskMain *stpTaskMain){
+void InitTaskMain(struct tyTaskMain *stpTaskMain)
+{
   stpTaskMain->uwStat = 0;
   stpTaskMain->uwMode = 0;
   stpTaskMain->uwStep = 0;
@@ -10,17 +11,27 @@ void InitTaskMain(struct tyTaskMain *stpTaskMain){
 	           ARRAYSZ(stpTaskMain->uwReqQue) );
 }
 
-void ExecTaskMain(struct tyTaskMain *stpTaskMain){
+void ExecTaskMain(struct tyTaskMain *stpTaskMain)
+{
   uint16_t uwReq;
   switch(stpTaskMain->uwStat){
     case 0: // INIT
       SerialPrintF(Serial, "Skelton Program Start\n");
-      SetSigMD(&(stTaskGPIO), PIDX_LED, OUT_PIN_REQ_BLINK);
+      SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_BLINK);
+      SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_OFF);
       stpTaskMain->uwStat += 1;
       break;
     case 1: // IDLE
-      if(DeQueReqTaskMain(stpTaskMain, &uwReq)){
-        stpTaskMain->uwStat += 1;
+      if(DeQueReqTaskMain(stpTaskMain, &uwReq)==0){
+        switch(uwReq){
+          case 0: SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_ON);    break;
+          case 1: SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_OFF);   break;
+          case 2: SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_PULSE); break;
+          case 3: SetGPIOMD(&stTaskGPIO, PIDX_LED, OUT_PIN_REQ_NULSE); break;
+        }
+      }
+      if(GetGPIOED(&stTaskGPIO,PIDX_BTN)){
+        SerialPrintF(Serial, "EDGE\n");
       }
       break;
     default:
@@ -29,7 +40,8 @@ void ExecTaskMain(struct tyTaskMain *stpTaskMain){
   }
 }
 
-int DeQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t *uwReq){
+int DeQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t *uwReq)
+{
 	int ret = 1;
 	if( RING_CAN_DEQUEUE( uint16_t, stpTaskMain->uwReqQue,
                         stpTaskMain->uwReqQueStt, stpTaskMain->uwReqQueEnd, stpTaskMain->uwReqQueCnt,
@@ -43,7 +55,8 @@ int DeQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t *uwReq){
 	return ret;
 }
 
-int EnQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t *uwReq){
+int EnQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t uwReq)
+{
 	int ret = 1;
 	if( RING_CAN_ENQUEUE( uint16_t, stpTaskMain->uwReqQue,
                         stpTaskMain->uwReqQueStt, stpTaskMain->uwReqQueEnd, stpTaskMain->uwReqQueCnt,
@@ -51,9 +64,8 @@ int EnQueReqTaskMain(struct tyTaskMain *stpTaskMain, uint16_t *uwReq){
 	){
 		RING_ENQUEUE( uint16_t, stpTaskMain->uwReqQue,
 		              stpTaskMain->uwReqQueStt, stpTaskMain->uwReqQueEnd, stpTaskMain->uwReqQueCnt,
-		              ARRAYSZ(stpTaskMain->uwReqQue), *uwReq);
+		              ARRAYSZ(stpTaskMain->uwReqQue), uwReq);
 		ret = 0;
 	}
 	return ret;
 }
-

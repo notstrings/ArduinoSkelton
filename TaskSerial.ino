@@ -1,14 +1,16 @@
 // ////////////////////////////////////////////////////////////////////////////
 // シリアル通信タスク(アスキー通信)
 
-void InitTaskSCIF(struct tyTaskSCIF *stpTaskSCIF){
+void InitTaskSCIF(struct tyTaskSCIF *stpTaskSCIF)
+{
   stpTaskSCIF->uwStat = 0;
   stpTaskSCIF->iBuff = 0;
   stpTaskSCIF->cBuff = 0;
   MEMSET(stpTaskSCIF->aBuff, 0, char, ARRAYSZ(stpTaskSCIF->aBuff));
 }
 
-void ExecTaskSCIF(struct tyTaskSCIF *stpTaskSCIF){
+void ExecTaskSCIF(struct tyTaskSCIF *stpTaskSCIF)
+{
   switch(stpTaskSCIF->uwStat){
     default:
     case 0: // 初端文字待機
@@ -17,7 +19,7 @@ void ExecTaskSCIF(struct tyTaskSCIF *stpTaskSCIF){
         stpTaskSCIF->iBuff = 0;
         stpTaskSCIF->aBuff[(stpTaskSCIF->iBuff)++] = stpTaskSCIF->cBuff;
         if (stpTaskSCIF->cBuff == '#') {
-          stpTaskSCIF->uwStat = 1;
+          stpTaskSCIF->uwStat += 1;
           break;
         }
       }
@@ -28,7 +30,7 @@ void ExecTaskSCIF(struct tyTaskSCIF *stpTaskSCIF){
         stpTaskSCIF->iBuff = stpTaskSCIF->iBuff;
         stpTaskSCIF->aBuff[(stpTaskSCIF->iBuff)++] = stpTaskSCIF->cBuff;
         if (stpTaskSCIF->cBuff == '\n') {
-          stpTaskSCIF->uwStat = 2;
+          stpTaskSCIF->uwStat += 1;
           break;
         }
       }
@@ -41,7 +43,7 @@ void ExecTaskSCIF(struct tyTaskSCIF *stpTaskSCIF){
         sscanf(&(stpTaskSCIF->aBuff)[8],  "%2d", &num);
         sscanf(&(stpTaskSCIF->aBuff)[11], "%2d", &val);
         switch (num) {
-//          case 0: SetReqTaskMain(&stTaskMain, 1); break;
+          case 0: EnQueReqTaskMain(&stTaskMain, (uint16_t)val); break;
         }
         SerialPrintF(Serial, "#EXEC00:%02d,%02d\n", num, val);
       }

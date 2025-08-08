@@ -9,13 +9,16 @@ struct tyTaskMain stTaskMain;
 struct tyTaskSCIF stTaskSCIF;
 struct tyTaskGPIO stTaskGPIO;
 
-void setup() {
+void setup()
+{
   Serial.begin(38400);
   pinMode(PNUM_LED, OUTPUT);
+  pinMode(PNUM_BTN, INPUT);
   while (!Serial);
 }
 
-void loop() {
+void loop()
+{
   InitTaskMain(&stTaskMain);    // メインタスク
   InitTaskSCIF(&stTaskSCIF);    // シリアル通信タスク
   InitTaskGPIO(&stTaskGPIO);    // GPIOタスク

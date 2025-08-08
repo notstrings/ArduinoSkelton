@@ -27,9 +27,11 @@ struct tyTaskSCIF {
 
 // GPIOタスク
 #define PNUM_LED 					(13)   	// ピン番号:死活確認用内蔵LED
+#define PNUM_BTN 					(30)   	// ピン番号:死活確認用内蔵LED
 #define PIDX_LED		  		(0)			// ピン位置:LED
+#define PIDX_BTN		  		(0)			// ピン位置:BTN
 static const uint16_t uwIPinID[] = {
-	PNUM_LED
+	PNUM_BTN
 };
 static const uint16_t uwIPinTM[] = {
 	10
@@ -38,7 +40,7 @@ static const uint16_t uwOPinID[] = {
 	PNUM_LED
 };
 static const uint16_t uwOPinTM[] = {
-	10
+	100
 };
 #define IPIN_MAX ((int)(ARRAYSZ(uwIPinID)))
 #define OPIN_MAX ((int)(ARRAYSZ(uwOPinID)))
