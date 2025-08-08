@@ -27,7 +27,7 @@ struct tyTaskSCIF {
 
 // GPIOタスク
 #define PNUM_LED 					(13)   	// ピン番号:死活確認用内蔵LED
-#define PNUM_BTN 					(30)   	// ピン番号:死活確認用内蔵LED
+#define PNUM_BTN 					(30)   	// ピン番号:死活確認用外付BTN
 #define PIDX_LED		  		(0)			// ピン位置:LED
 #define PIDX_BTN		  		(0)			// ピン位置:BTN
 static const uint16_t uwIPinID[] = {
